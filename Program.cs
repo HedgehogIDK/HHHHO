@@ -13,6 +13,7 @@ WriteLine(a < b);
 WriteLine(a != b);
 WriteLine(a.Equals(b));
 
+
 class Magazine
 {
     private string _name, _description, _phone, _mail;
