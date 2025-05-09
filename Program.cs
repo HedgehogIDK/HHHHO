@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using static System.Console;
 
 Magazine a = new Magazine(123);
@@ -205,3 +207,69 @@ class Shop
     }
 }
 
+class ListOfBooks
+{
+    private string[] list;
+    private int size;
+
+    public ListOfBooks(int sizeList)
+    {
+        size = sizeList;
+        list = new string[size];
+    }
+    public void Print()
+    {
+        foreach(var obj in list)
+        {
+            WriteLine(obj);
+        }
+    }
+    public void Add(string userBook)
+    {
+        Array.Resize(ref list,size++);
+        
+        list[size - 1] = userBook;
+    }
+    public void Del()
+    {
+        Array.Resize(ref list, size--);
+    }
+    public bool Search(string userBook)
+    {
+        if (list.Contains(userBook))
+            return true;
+
+        return false;
+    }
+    public static ListOfBooks operator +(ListOfBooks first, ListOfBooks second)
+    {
+        ListOfBooks buffer = new ListOfBooks(first.size + second.size);
+        for (int i = 0; i < first.size; i++)
+        {
+            buffer.list[i] = first.list[i];
+        }
+        for (int i = 0; i < second.size; i++)
+        {
+            buffer.list[i + first.size] = second.list[i]; 
+        }
+        return buffer;
+    }
+    public static bool operator ==(ListOfBooks obj1, ListOfBooks obj2)
+    {
+        if (obj1.list == obj2.list)
+            return true;
+        return false;
+    }
+    public static bool operator !=(ListOfBooks obj1, ListOfBooks obj2)
+    {
+        if (obj1.list != obj2.list)
+            return true;
+        return false;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is ListOfBooks buf) return list == buf.list;
+        return false;
+    }
+}
