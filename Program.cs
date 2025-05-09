@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using static System.Exception;
 using static System.Console;
 
 Magazine a = new Magazine(123);
@@ -28,7 +29,39 @@ WriteLine(c < f);
 WriteLine(c != f);
 WriteLine(c.Equals(f));
 
+Fraction f1 = new Fraction(1, 2);
+Fraction f2 = new Fraction(1, 3);
 
+Fraction sum = f1 + f2;
+Fraction diff = f1 - f2;
+Fraction mul = f1 * f2;
+Fraction div = f1 / f2;
+
+WriteLine("Работа с дробями:");
+Write("f1 + f2 = "); sum.Print();
+Write("f1 - f2 = "); diff.Print();
+Write("f1 * f2 = "); mul.Print();
+Write("f1 / f2 = "); div.Print();
+
+
+ListOfBooks list1 = new ListOfBooks(2);
+list1.Add("1984");
+list1.Add("Brave New World");
+
+ListOfBooks list2 = new ListOfBooks(1);
+list2.Add("Fahrenheit 451");
+
+WriteLine("\nСписок 1:");
+list1.Print();
+WriteLine("Список 2:");
+list2.Print();
+
+ListOfBooks merged = list1 + list2;
+WriteLine("Объединённый список:");
+merged.Print();
+
+WriteLine($"Найдено '1984'? {merged.Search("1984")}");
+WriteLine($"Списки равны? {list1 == list2}");
 
 
 class Magazine
@@ -271,5 +304,53 @@ class ListOfBooks
     {
         if (obj is ListOfBooks buf) return list == buf.list;
         return false;
+    }
+}
+
+class Fraction
+{
+    private int numerator, denominator;
+    public Fraction(int num, int den)
+    {
+        if(den == 0)
+        {
+            throw new Exception("Denominator cannot be zero.");
+        }
+        else
+        {
+            numerator = num;
+            denominator = den;
+        }
+    }
+    public void Print()
+    {
+        WriteLine($"{numerator}/{denominator}");
+    }
+
+    public static Fraction operator +(Fraction a, Fraction b)
+    {
+        int num = a.numerator * b.denominator + b.numerator * a.denominator;
+        int den = a.denominator * b.denominator;
+        return new Fraction(num, den);
+    }
+
+    public static Fraction operator -(Fraction a, Fraction b)
+    {
+        int num = a.numerator * b.denominator - b.numerator * a.denominator;
+        int den = a.denominator * b.denominator;
+        return new Fraction(num, den);
+    }
+
+    public static Fraction operator *(Fraction a, Fraction b)
+    {
+        return new Fraction(a.numerator * b.numerator, a.denominator * b.denominator);
+    }
+
+    public static Fraction operator /(Fraction a, Fraction b)
+    {
+        if (b.numerator == 0)
+            throw new DivideByZeroException("Cannot divide by zero.");
+
+        return new Fraction(a.numerator * b.denominator, a.denominator * b.numerator);
     }
 }
